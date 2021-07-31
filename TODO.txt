@@ -1,0 +1,4 @@
+CREATE MOCKUPS
+    - Share page mockup
+    - Watchlist mockup
+    - Portofolio mockup
