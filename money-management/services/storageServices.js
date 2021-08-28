@@ -36,6 +36,7 @@ export default {
 
     try {
       const keys = await AsyncStorage.getAllKeys();
+
       const result = await AsyncStorage.multiGet(keys);
       result.map((req) => items.push(req[1]));
       return items;

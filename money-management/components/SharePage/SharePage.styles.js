@@ -30,4 +30,9 @@ export default StyleSheet.create({
     color: "#374046",
     fontStyle: "italic",
   },
+  chartTitle: {
+    color: "#374046",
+    fontStyle: "italic",
+    marginLeft: "10%",
+  },
 });

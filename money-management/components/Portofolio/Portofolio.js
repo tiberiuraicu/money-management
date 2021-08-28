@@ -1,39 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, Text, TouchableOpacity } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
-import * as financeServices from "../../services/financeServices";
-import { Dimensions } from "react-native";
-import { PieChart } from "react-native-chart-kit";
+import * as portofolioServices from "./Portofolio.services";
 import styles from "./Portofolio.styles";
-
 const Portofolio = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   const [ownedSharesList, setOwnedSharesList] = useState([]);
   const [portofolioValue, setPortofolioValue] = useState();
-  const [chartData, setchartData] = useState([]);
 
   async function setPortofolioValueHandler() {
-    try {
-      var sharesAnalyticsList =
-        await financeServices.default.getAnalyticsForAllShares();
-      setOwnedSharesList(sharesAnalyticsList);
-      var portofolioValue = 0;
-      var data = [];
+    const [portofolioValue, sharesAnalyticsList] =
+      await portofolioServices.getAnalyticsForAllShares();
+    setOwnedSharesList(sharesAnalyticsList);
 
-      sharesAnalyticsList.map((item) => {
-        portofolioValue += item.shareTotalValue;
-        data.push({
-          name: item.symbol,
-          population: item.shareTotalValue,
-          color: item.pieChartColor,
-          legendFontColor: "#7F7F7F",
-          legendFontSize: 15,
-        });
-      });
-      setchartData(data);
-      setPortofolioValue(portofolioValue.toFixed(2));
-    } catch (exception) {}
+    setPortofolioValue(portofolioValue.toFixed(2));
   }
 
   useEffect(() => {
@@ -42,33 +23,41 @@ const Portofolio = ({ navigation }) => {
     }
   }, [isFocused]);
 
+  const getProfitLossColor = (number) => {
+    let itemCardText = {
+      color: "#374046",
+      fontStyle: "italic",
+    };
+
+    if (number > 0) itemCardText["color"] = "green";
+    if (number < 0) itemCardText["color"] = "red";
+
+    return itemCardText;
+  };
+
   return (
     <View style={styles.listContainer}>
-      <View>
-        <View style={styles.portofolioValueContainer}>
-          <Text style={styles.portofolioValueText}>
-            Portofolio value {portofolioValue}
-          </Text>
-        </View>
-        <PieChart
-          data={chartData}
-          width={Dimensions.get("window").width}
-          height={270}
-          accessor="population"
-          backgroundColor="transparent"
-          paddingLeft="45"
-          chartConfig={{
-            color: () => `black`,
-          }}
-        />
+      <View style={styles.portofolioValueContainer}>
+        <Text style={styles.portofolioValueText}>
+          Portofolio value {portofolioValue}
+        </Text>
       </View>
+      <TouchableOpacity
+        style={styles.addTransactionButton}
+        onPress={() => {
+          navigation.navigate("AddNewTransaction");
+        }}
+      >
+        <Text style={styles.addTransactionText}>ADD HOLDINGS</Text>
+      </TouchableOpacity>
+
       <View style={styles.itemlist}>
         <FlatList
           data={ownedSharesList}
           renderItem={(itemData) => (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("SharePageNavigator", {
+                navigation.navigate("SharePage", {
                   symbol: itemData.item.symbol,
                 })
               }
@@ -80,14 +69,18 @@ const Portofolio = ({ navigation }) => {
                   </Text>
                 </View>
                 <View style={styles.alanyticView}>
-                  <Text style={styles.itemCardText}>Total value</Text>
-                  <Text style={styles.itemCardText}>
+                  <Text style={styles.itemCardLabel}>Total value</Text>
+                  <Text style={styles.itemCardLabel}>
                     {Number(itemData.item.shareTotalValue).toFixed(2)}
                   </Text>
                 </View>
                 <View style={styles.alanyticView}>
-                  <Text style={styles.itemCardText}>Profit </Text>
-                  <Text style={styles.itemCardText}>
+                  <Text style={styles.itemCardLabel}>Profit/Loss </Text>
+                  <Text
+                    style={getProfitLossColor(
+                      Number(itemData.item.shareTotalProfit).toFixed(2)
+                    )}
+                  >
                     {Number(itemData.item.shareTotalProfit).toFixed(2)}
                   </Text>
                 </View>

@@ -5,7 +5,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import PortofolioNavigator from "./components/Portofolio/PortofolioNavigator";
 import WatchList from "./components/WatchList/WatchList";
-
+import Search from "./components/Search/Search";
 export default function App() {
   const Tab = createMaterialBottomTabNavigator();
 
@@ -39,20 +39,16 @@ export default function App() {
           component={WatchList}
           options={{
             tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="eye" color={color} size={26} />
+              <MaterialCommunityIcons name="eye" color={color} size={25} />
             ),
           }}
         />
         <Tab.Screen
-          name="Add new transaction"
-          component={AddNewTransaction}
+          name="Search"
+          component={Search}
           options={{
             tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons
-                name="plus-circle"
-                color={color}
-                size={26}
-              />
+              <MaterialCommunityIcons name="magnify" color={color} size={28} />
             ),
           }}
         />

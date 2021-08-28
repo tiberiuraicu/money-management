@@ -13,7 +13,6 @@ const History = ({ route, navigation }) => {
 
   const setShareHistoryHandler = async () => {
     setShareHistory(await getShareHistory(symbol));
-    console.log(shareHistory);
   };
 
   useEffect(() => {

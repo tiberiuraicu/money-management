@@ -3,16 +3,15 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   listContainer: {
     width: "100%",
-    height: "75%",
+    height: "95%",
+    marginTop: "10%",
     // borderBottomWidth: 2,
     // borderBottomColor: "red",
   },
 
   itemlist: {
-    height: "80%",
+    height: "100%",
     paddingTop: 10,
-    paddingBottom: 20,
-    marginBottom: 200,
   },
   shareCardData: {
     padding: 10,

@@ -1,47 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
-import { View, ScrollView, FlatList, Text } from "react-native";
+import {
+  View,
+  ScrollView,
+  FlatList,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import styles from "./SharePage.styles";
 import { getShareMetrics, getShareEarnings } from "./SharePage.services";
-import { LineChart } from "react-native-chart-kit";
+// import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
-
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryTheme,
+  Bar,
+  VictoryGroup,
+  VictoryLegend,
+} from "victory-native";
+import Svg from "react-native-svg";
 const SharePage = ({ route, navigation }) => {
   const isFocused = useIsFocused();
 
   const [shareData, setshareData] = useState([]);
   const [shareEarnings, setShareEarnings] = useState({
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        colors: [],
-        strokeWidth: 2, // optional
-      },
-    ],
-    legend: ["EPS Actual"], // optional
+    EPS: {
+      estimate: [],
+      actual: [],
+    },
   });
-  const { symbol } = route.params;
+  var { symbol } = route.params;
   const setshareDataHandler = async () => {
     setshareData(await getShareMetrics(symbol));
   };
 
   const setShareEarningsHandler = async () => {
-    let response = await getShareEarnings(symbol);
-    let x = {};
-    x["labels"] = response.EPS.date;
-    x["datasets"] = [];
-
-    x.datasets.push({
-      data: response.EPS.actual,
-      color: (opacity = 1) => "blue",
-
-      strokeWidth: 2,
-    });
-
-    setShareEarnings(x);
+    setShareEarnings(await getShareEarnings(symbol));
   };
-
   useEffect(() => {
     if (isFocused) {
       setshareDataHandler();
@@ -49,54 +45,10 @@ const SharePage = ({ route, navigation }) => {
     }
   }, [isFocused]);
 
-  const chartConfig = {
-    backgroundGradientFrom: "white",
-    backgroundGradientFromOpacity: 1,
-    backgroundGradientTo: "white",
-    backgroundGradientToOpacity: 1,
-    color: (opacity = 1) => `black`,
-    strokeWidth: 2, // optional, default 3
-    useShadowColorFromDataset: false, // optional
-    strokeWidth: 0,
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "black",
-    },
-    // propsForVerticalLabels: {
-    //   r: "6",
-    //   strokeWidth: "2",
-    //   stroke: "black",
-    // },
-  };
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.companyName}>{symbol}</Text>
       <View style={styles.itemlist}>
-        <View
-          style={{
-            backgroundColor: "white",
-            paddingTop: "5%",
-          }}
-        >
-          <Text>EPS</Text>
-          <LineChart
-            style={{
-              marginTop: 10,
-              marginBottom: 10,
-              width: "80%",
-            }}
-            data={shareEarnings}
-            width={
-              Dimensions.get("window").width -
-              (Dimensions.get("window").width * 5) / 100
-            }
-            height={220}
-            chartConfig={chartConfig}
-            withShadow={false}
-            res
-          />
-        </View>
         <FlatList
           data={shareData}
           renderItem={(itemData) => (
@@ -109,6 +61,55 @@ const SharePage = ({ route, navigation }) => {
             </View>
           )}
         />
+        <View
+          style={{
+            backgroundColor: "white",
+            paddingTop: "5%",
+          }}
+        >
+          <Text style={styles.chartTitle}>EPS last 4 quarters</Text>
+        </View>
+      </View>
+      <View
+        style={{ paddingBottom: 50, paddingTop: 10, backgroundColor: "white" }}
+      >
+        <Svg>
+          <VictoryChart
+            theme={VictoryTheme.material}
+            padding={{ top: 100, left: 40, right: 20, bottom: 40 }}
+            style={{
+              background: { fill: "white" },
+            }}
+          >
+            <VictoryLegend
+              x={20}
+              y={10}
+              title="Legend"
+              centerTitle
+              orientation="horizontal"
+              gutter={20}
+              style={{
+                border: { stroke: "black" },
+                title: { fontSize: 20 },
+              }}
+              data={[
+                { name: "Estimate", symbol: { fill: "blue" } },
+                { name: "Actual", symbol: { fill: "green" } },
+              ]}
+            />
+            <VictoryGroup offset={30} colorScale={["blue", "green"]}>
+              <VictoryBar
+                padding={{ top: 20, bottom: 60 }}
+                activateData={false}
+                data={shareEarnings.EPS.estimate}
+              />
+              <VictoryBar
+                activateData={false}
+                data={shareEarnings.EPS.actual}
+              />
+            </VictoryGroup>
+          </VictoryChart>
+        </Svg>
       </View>
     </ScrollView>
   );

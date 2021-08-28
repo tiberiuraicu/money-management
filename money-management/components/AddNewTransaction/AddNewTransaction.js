@@ -6,8 +6,9 @@ import {
   Text,
   SafeAreaView,
   Button,
+  FlatList,
+  Switch,
 } from "react-native";
-import SearchableDropdown from "react-native-searchable-dropdown";
 import financeServices from "../../services/financeServices";
 import styles from "./AddNewTransaction.styles";
 import * as transactionServices from "./AddNewTransaction.services";
@@ -15,20 +16,37 @@ import * as storage from "../../services/storageServices";
 
 const AddNewTransaction = () => {
   const [symbol, setSymbol] = useState("");
-  const [priceAtBuy, setPriceAtBuy] = useState("");
-  const [investedAmount, setInvestedAmount] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [placeholders, setPlaceholders] = useState({
+    price: "Price at buy",
+    amount: "Number of shares bought",
+    transactionType: "BUY",
+  });
+  const [price, setPrice] = useState("");
+  const [numberOfShares, setNumberOfShares] = useState("");
   const [autocompleteNames, setAutocompleteNames] = useState([]);
 
   async function setAutocompleteNamesHandler(searchTerm) {
+    setSymbol(searchTerm);
     setAutocompleteNames(await financeServices.getAutoCompleteData(searchTerm));
   }
 
   async function addNewTransaction() {
-    const transaction = {
-      priceAtBuy: priceAtBuy,
-      investedAmount: investedAmount,
-      transactionKey: Math.random().toString(),
-    };
+    var transaction = {};
+    if (placeholders.transactionType === "BUY")
+      transaction = {
+        price: price,
+        numberOfShares: numberOfShares,
+        transactionKey: Math.random().toString(),
+        transactionType: placeholders.transactionType,
+      };
+    else if (placeholders.transactionType === "SELL")
+      transaction = {
+        price: price,
+        numberOfShares: numberOfShares,
+        transactionKey: Math.random().toString(),
+        transactionType: placeholders.transactionType,
+      };
     transactionServices.addTransaction(transaction, symbol);
   }
 
@@ -36,45 +54,95 @@ const AddNewTransaction = () => {
     storage.default.clearAllData();
   };
 
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
+    if (isEnabled) {
+      setPlaceholders({
+        price: "Price at buy",
+        amount: "Number of shares bought",
+        transactionType: "BUY",
+      });
+    } else if (!isEnabled) {
+      setPlaceholders({
+        price: "Price at sell",
+        amount: "Number of shares sold",
+        transactionType: "SELL",
+      });
+    }
+  };
+  const flatListStyle = () => {
+    if (autocompleteNames.length == 0) return { height: 0 };
+    else return { height: 20 };
+  };
   return (
     <SafeAreaView
       style={styles.container}
       keyboardShouldPersistTaps={"handled"}
     >
+      <View
+        style={{
+          marginTop: "5%",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+          {placeholders.transactionType}
+        </Text>
+      </View>
       <View style={styles.inputContainer}>
-        <SearchableDropdown
-          selectedItems={symbol}
-          onItemSelect={(item) => {
-            setSymbol(item);
-          }}
-          containerStyle={{ padding: 7 }}
-          itemStyle={styles.dropdownItems}
-          itemsContainerStyle={{ maxHeight: 140 }}
-          items={autocompleteNames}
-          textInputProps={{
-            placeholder: "Share symbol",
-            style: styles.dropdownTextInput,
-            onTextChange: (text) => {
-              setAutocompleteNamesHandler(text);
-            },
-          }}
-          listProps={{
-            nestedScrollEnabled: true,
-          }}
+        <TextInput
+          value={symbol}
+          style={styles.textInput}
+          placeholder=" Search term"
+          placeholderTextColor="#788793"
+          onChangeText={setAutocompleteNamesHandler}
         />
+        <View style={flatListStyle}>
+          <FlatList
+            data={autocompleteNames}
+            keyboardShouldPersistTaps="always"
+            renderItem={(itemData) => (
+              <TouchableOpacity
+                onPress={() => {
+                  setSymbol(itemData.item.symbol);
+                  setAutocompleteNames([]);
+                }}
+              >
+                <View key={itemData.item.name} style={styles.shareCardData}>
+                  <View style={styles.alanyticView}>
+                    <Text style={styles.itemCardText}>
+                      {itemData.item.symbol}
+                    </Text>
+                    <Text style={styles.itemCardText}>
+                      {itemData.item.name}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
         <TextInput
           style={styles.textInput}
           keyboardType="numeric"
-          placeholder=" Price at buy"
+          placeholder={placeholders.price}
           placeholderTextColor="#788793"
-          onChangeText={setPriceAtBuy}
+          onChangeText={setPrice}
         />
         <TextInput
           style={styles.textInput}
-          placeholder=" Invested amount"
+          placeholder={placeholders.amount}
           keyboardType="numeric"
           placeholderTextColor="#788793"
-          onChangeText={setInvestedAmount}
+          onChangeText={setNumberOfShares}
         />
         <TouchableOpacity
           style={styles.addTransactionButton}
@@ -87,7 +155,7 @@ const AddNewTransaction = () => {
         <Button
           style={styles.button}
           title="Delete all data"
-          onPress={transactionServices.clearAllData}
+          onPress={clearAllData}
         />
       </View> */}
     </SafeAreaView>
