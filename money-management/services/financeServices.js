@@ -5,8 +5,8 @@ import * as Permissions from "expo-permissions";
 
 export default {
   async getShareHistory(symbol) {
-    var shareHistory = await storage.default.getItem(symbol);
-    shareHistory = JSON.parse(shareHistory);
+    var shareHistory = await storage.default.getItem("portofolio");
+    shareHistory = JSON.parse(shareHistory[symbol]);
 
     //return the current share transactions
     return shareHistory.transactions;

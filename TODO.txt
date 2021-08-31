@@ -2,3 +2,12 @@ CREATE MOCKUPS
     - Share page mockup
     - Watchlist mockup
     - Portofolio mockup
+
+TODO
+editare flow de tranzactii
+after market
+eliminate if in pre si post market function in watchlist
+
+DONE
+pre market watchlist 
+fix error cand nu e nimic in watchlist
