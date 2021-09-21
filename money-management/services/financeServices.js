@@ -7,9 +7,22 @@ export default {
   async getShareHistory(symbol) {
     var shareHistory = await storage.default.getItem("portofolio");
     shareHistory = JSON.parse(shareHistory[symbol]);
-
+console.log(shareHistory)
     //return the current share transactions
-    return shareHistory.transactions;
+    // return shareHistory.transactions;
+  },
+  async getShareEarnings(symbol) {
+    return await yahooFinance.quoteSummary(symbol, {
+      modules: ["earnings"],
+    });
+  },
+
+  async getHistory() {
+    var portfolio = await storage.default.getItem("portofolio");
+    var shareHistory = JSON.parse(portfolio)
+console.log(shareHistory)
+    //return the current share transactions
+    // return shareHistory.transactions;
   },
   async getShareEarnings(symbol) {
     return await yahooFinance.quoteSummary(symbol, {
