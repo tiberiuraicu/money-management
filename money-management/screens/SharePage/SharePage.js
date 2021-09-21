@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
-import { ActivityIndicator,View, ScrollView, FlatList, Text } from "react-native";
+import {
+  ActivityIndicator,
+  View,
+  ScrollView,
+  FlatList,
+  Text,
+  RefreshControl
+} from "react-native";
 import styles from "./SharePage.styles";
 import { getShareMetrics, getShareEarnings } from "./SharePage.services";
 import {
@@ -32,7 +39,6 @@ const SharePage = ({ route, navigation }) => {
 
     setshareData(await getShareMetrics(symbol));
     setActivityIndicator(false);
-
   };
 
   const setShareEarningsHandler = async () => {
@@ -46,13 +52,21 @@ const SharePage = ({ route, navigation }) => {
   }, [isFocused]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={false}
+          onRefresh={() => {
+            setshareDataHandler();
+            setShareEarningsHandler();
+          }}
+        />
+      }
+    >
       <Text style={styles.companyName}>{symbol}</Text>
-      {activityIndicator && (
-          <ActivityIndicator size="large" color="#0000ff" />
-        )}
+      {activityIndicator && <ActivityIndicator size="large" color="#0000ff" />}
       <View style={styles.itemlist}>
-        
         <FlatList
           data={shareData}
           renderItem={(itemData) => (

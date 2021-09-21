@@ -6,8 +6,9 @@ import {
   Text,
   TouchableOpacity,
   Alert,
-  Button,
+  RefreshControl,
   KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import * as portofolioServices from "./Portofolio.services";
@@ -86,7 +87,15 @@ const Portofolio = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.listContainer} behavior="padding">
+    <ScrollView
+      style={styles.listContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={false}
+          onRefresh={setPortofolioValueHandler}
+        />
+      }
+    >
       <View style={styles.portofolioValueContainer}>
         <Text style={styles.portofolioValueText}>
           Portofolio value {portofolioValue}
@@ -94,6 +103,7 @@ const Portofolio = ({ navigation }) => {
       </View>
 
       <CustomButton
+        style={{ flex: 3 }}
         onPress={() => {
           navigation.navigate("AddNewTransaction");
         }}
@@ -108,6 +118,7 @@ const Portofolio = ({ navigation }) => {
         <FlatList
           testID="sharesList"
           data={ownedSharesList}
+          style={{ flex: 1 }}
           renderItem={(itemData) => (
             <PortfolioRow>
               <TouchableOpacity
@@ -205,7 +216,7 @@ const Portofolio = ({ navigation }) => {
           </TouchableOpacity>
         </Modal>
       </View>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

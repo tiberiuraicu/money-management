@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {ActivityIndicator, View, FlatList, Text, TouchableOpacity } from "react-native";
+import {
+  RefreshControl,
+  ActivityIndicator,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { getWatchList } from "./WatchList.services";
 import styles from "./WatchList.styles";
@@ -62,9 +70,17 @@ const WatchList = ({ navigation }) => {
       );
   }
   return (
-    <View style={styles.listContainer}>
+    <ScrollView
+      style={styles.listContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={false}
+          onRefresh={setWatchListSharesListHandler}
+        />
+      }
+    >
       <View style={styles.itemlist}>
-      {activityIndicator && (
+        {activityIndicator && (
           <ActivityIndicator size="large" color="#0000ff" />
         )}
         <FlatList
@@ -101,7 +117,7 @@ const WatchList = ({ navigation }) => {
           )}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

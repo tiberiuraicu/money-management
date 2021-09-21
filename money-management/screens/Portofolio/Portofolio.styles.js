@@ -2,14 +2,12 @@ import { StyleSheet,Dimensions } from "react-native";
 
 export default StyleSheet.create({
   listContainer: {
+    flex:1,
     width: "100%",
-    height:Dimensions.get('window').height
   },
   itemlist: {
+    flex:1,
     marginTop: "4%",
-    height: "90%",
-    paddingBottom: 20,
-    marginBottom: 200,
   },
   portofolioValueContainer: {
     width: "100%",

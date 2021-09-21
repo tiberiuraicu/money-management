@@ -3,13 +3,12 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   listContainer: {
     width: "100%",
-    height: "95%",
+    flex:1,
     marginTop: "10%",
   },
 
   itemlist: {
-    height: "100%",
-    paddingTop: 10,
+    flex:1,
   },
 
   itemCardCompanyName: {
