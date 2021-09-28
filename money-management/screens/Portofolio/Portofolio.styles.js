@@ -1,15 +1,18 @@
-import { StyleSheet,Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 export default StyleSheet.create({
   listContainer: {
-    flex:1,
+    flex: 1,
     width: "100%",
   },
   itemlist: {
-    flex:1,
+    flex: 1,
     marginTop: "4%",
   },
   portofolioValueContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
     width: "100%",
     backgroundColor: "#FFFFFF",
   },
@@ -27,5 +30,4 @@ export default StyleSheet.create({
     fontWeight: "bold",
     paddingLeft: 10,
   },
-  
 });

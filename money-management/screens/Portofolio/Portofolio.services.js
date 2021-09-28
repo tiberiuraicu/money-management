@@ -1,5 +1,6 @@
 import * as financeServices from "../../services/financeServices";
 import * as storageServices from "../../services/storageServices";
+import { appVariables } from "../../common/appVariables";
 
 export async function getAllSharesPrices(portofolio) {
   let symbolList = [];
@@ -11,15 +12,17 @@ export async function getAllSharesPrices(portofolio) {
     }
 
     var shareQuote = await financeServices.default.getShareMetrics(symbolList);
+    //  console.log(shareQuote)
     symbolList = {};
 
     for (var item in shareQuote) {
       symbolList[shareQuote[item].symbol] = {
-        price: shareQuote[item].regularMarketPrice,
+        price: await convertToSelectedAppCoin(shareQuote[item]),
         shortName: shareQuote[item].shortName,
       };
     }
   }
+
   return symbolList;
 }
 
@@ -89,7 +92,10 @@ export async function getAnalyticsForAllShares() {
           storageServices.default.setItem("portofolio", portofolio);
         }
       }
-      return [portofolioValue, sharesAnalyticsList];
+      return [
+        portofolioValue.toFixed(2) + " " + appVariables.appCurrency,
+        sharesAnalyticsList,
+      ];
     } else return [0, []];
   } catch (exception) {
     console.log(exception);
@@ -106,4 +112,48 @@ export async function deleteShareData(symbol) {
   portofolio.shares = shares;
   // update protfolio
   storageServices.default.setItem("portofolio", portofolio);
+}
+
+export async function convertToSelectedAppCoin(shareQuote) {
+  // initialise the price variable
+  let price = 0;
+
+  // get share price
+  price = shareQuote.regularMarketPrice;
+  // get share currency
+  let currency = shareQuote.financialCurrency;
+  // if it is different from the app currency
+  if (currency !== appVariables.appCurrency) {
+    // convert price to app currency
+    var rates = await financeServices.default.getRatesForCoin(
+      currency,
+      appVariables.appCurrency
+    );
+    price = rates.rates[appVariables.appCurrency] * price;
+  }
+
+  // return price
+  return price;
+}
+
+export function setAppCurrency(currency) {
+  appVariables.appCurrency = currency;
+}
+
+export async function getAvailableCurrencies() {
+  var existingCurrencies =
+    await financeServices.default.getAvailableCurrencies();
+
+  var existingCurrenciesAsJson =[];
+
+  for (var symbol in Object.keys(existingCurrencies)) {
+    symbol = Object.keys(existingCurrencies)[symbol];
+    existingCurrenciesAsJson.push({
+      symbol: symbol,
+      name: existingCurrencies[symbol],
+    });
+  }
+
+  console.log(existingCurrenciesAsJson);
+  return existingCurrenciesAsJson;
 }

@@ -7,7 +7,6 @@ export default {
   async getShareHistory(symbol) {
     var shareHistory = await storage.default.getItem("portofolio");
     shareHistory = JSON.parse(shareHistory[symbol]);
-console.log(shareHistory)
     //return the current share transactions
     // return shareHistory.transactions;
   },
@@ -19,11 +18,11 @@ console.log(shareHistory)
 
   async getHistory() {
     var portfolio = await storage.default.getItem("portofolio");
-    var shareHistory = JSON.parse(portfolio)
-console.log(shareHistory)
+    var shareHistory = JSON.parse(portfolio);
     //return the current share transactions
     // return shareHistory.transactions;
   },
+
   async getShareEarnings(symbol) {
     return await yahooFinance.quoteSummary(symbol, {
       modules: ["earnings"],
@@ -41,6 +40,9 @@ console.log(shareHistory)
   },
 
   async getAutoCompleteData(text) {
+    const host = "api.frankfurter.app";
+
+  
     // create array for storing suggestions for autocomplete
     var suggestions = [];
     try {
@@ -66,6 +68,24 @@ console.log(shareHistory)
     } catch (error) {}
     return suggestions;
   },
+
+  async getAvailableCurrencies(){
+    const host = "api.frankfurter.app";
+
+    const  res= await fetch(
+      `https://${host}/currencies?`
+    )
+    return res.json();
+  },
+
+  async getRatesForCoin(fromCoin, toCoin) {
+    const host = "api.frankfurter.app";
+    const response = await fetch(
+      `https://${host}/latest?amount=1&from=${fromCoin}&to=${toCoin}`
+    );
+    return response.json();
+  },
+
   // test notifications
   async askPermissions() {
     const { status: existingStatus } = await Permissions.getAsync(

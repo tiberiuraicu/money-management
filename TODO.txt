@@ -8,14 +8,18 @@ adaugare istoric
 sa vina dividendele dar sa dea user accept daca chiar au venit
 eliminate if in pre si post market function in watchlist
 LA Watchlist nu se poate da scroll
-adauga pret in functie de moneda actiunii
 dupa ce s-a adaugat o actiune goleste inputurile
 search in Portofolio(sau ceva ordonare)
 search in Watchlist(sau ceva ordonare)
 adauga iconita cand nu merge netul
-cand tragi in jos sa se faca refresh(protfolio, watchlist, sharepage)
 daca actiunea nu mai exista sa arate un mesaj
+adauga poza aplicatie
+
 DONE
+adauga selectare moneda aplicatie
+adauga pret in functie de moneda actiunii
+cand tragi in jos sa se faca refresh(protfolio, watchlist, sharepage)
+fix nu se vede si ultimul element(sau se vede jumate) din protofoliu si watchlist
 la add new transaction nu se face automat unfocus cand dai addnew transaction si poate insera litere in basa de date asa
 pre market watchlist 
 fix error cand nu e nimic in watchlist

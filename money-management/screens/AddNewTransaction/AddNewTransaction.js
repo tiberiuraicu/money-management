@@ -200,13 +200,13 @@ const AddNewTransaction = () => {
           text="ADD TRANSACTION"
         ></CustomButton>
       </View>
-      {/* <View>
+      <View>
         <Button
           style={styles.button}
           title="Delete all data"
           onPress={transactionServices.clearAllData()}
         />
-      </View> */}
+      </View>
     </ScrollView>
   );
 };

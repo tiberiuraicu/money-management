@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
-  KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
@@ -25,11 +24,16 @@ import Modal from "react-native-modal";
 
 const Portofolio = ({ navigation }) => {
   const isFocused = useIsFocused();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isShareModalVisible, setShareModalVisibility] = useState(false);
+  const [isCurrenciesModalVisible, setCurrenciesModalVisibility] =
+    useState(false);
+
   const [editSymbol, setEditSymbol] = useState("");
 
   const [activityIndicator, setActivityIndicator] = useState(true);
   const [ownedSharesList, setOwnedSharesList] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+
   const [portofolioValue, setPortofolioValue] = useState();
 
   async function setPortofolioValueHandler() {
@@ -40,11 +44,15 @@ const Portofolio = ({ navigation }) => {
     setActivityIndicator(false);
     setOwnedSharesList(sharesAnalyticsList);
 
-    setPortofolioValue(portofolioValue.toFixed(2));
+    setPortofolioValue(portofolioValue);
+  }
+
+  async function getAvailableCurrencies() {
+    setCurrencies(await portofolioServices.getAvailableCurrencies());
   }
 
   const toggleModal = (symbol) => {
-    setModalVisible(!isModalVisible);
+    setShareModalVisibility(!isShareModalVisible);
     setEditSymbol(symbol);
   };
 
@@ -75,6 +83,7 @@ const Portofolio = ({ navigation }) => {
   useEffect(() => {
     if (isFocused) {
       setPortofolioValueHandler();
+      getAvailableCurrencies();
     }
   }, [isFocused]);
 
@@ -100,6 +109,17 @@ const Portofolio = ({ navigation }) => {
         <Text style={styles.portofolioValueText}>
           Portofolio value {portofolioValue}
         </Text>
+
+        <TouchableOpacity
+          testID="money-multiple"
+          onPress={() => setCurrenciesModalVisibility(true)}
+        >
+          <MaterialCommunityIcons
+            name="cash-multiple"
+            color={"green"}
+            size={25}
+          />
+        </TouchableOpacity>
       </View>
 
       <CustomButton
@@ -195,25 +215,56 @@ const Portofolio = ({ navigation }) => {
             </PortfolioRow>
           )}
         />
+
         <Modal
-          isVisible={isModalVisible}
+          isVisible={isShareModalVisible}
           onRequestClose={() => {
-            setModalVisible(false);
+            setShareModalVisibility(false);
           }}
           onModalHide={() => setPortofolioValueHandler()}
           statusBarTranslucent={true}
         >
           <TouchableOpacity
             onPress={() => {
-              setModalVisible(false);
+              setShareModalVisibility(false);
               setPortofolioValueHandler();
             }}
           >
             <AddNewTransaction
               symbol={editSymbol}
-              setModalVisible={setModalVisible}
+              setModalVisible={setShareModalVisibility}
             />
           </TouchableOpacity>
+        </Modal>
+        <Modal
+          isVisible={isCurrenciesModalVisible}
+          onRequestClose={() => {
+            setCurrenciesModalVisibility(false);
+          }}
+          onModalHide={() => setPortofolioValueHandler()}
+          statusBarTranslucent={true}
+        >
+          <FlatList
+            data={currencies}
+            style={{ flex: 1 }}
+            renderItem={(itemData) => (
+              <Card>
+                <TouchableOpacity
+                  onPress={() => {
+                    portofolioServices.setAppCurrency(itemData.item.symbol);
+                    setPortofolioValueHandler();
+                    setCurrenciesModalVisibility(false);
+                  }}
+                >
+       
+                  <CardRow>
+                    <Text>{itemData.item.symbol}</Text>
+                    <Text>{itemData.item.name}</Text>
+                  </CardRow>
+                </TouchableOpacity>
+              </Card>
+            )}
+          ></FlatList>
         </Modal>
       </View>
     </ScrollView>

@@ -1,13 +1,22 @@
 import financeServices from "../../services/financeServices";
+import { appVariables } from "../../common/appVariables";
 
 export async function getShareMetrics(symbol) {
   let shareData = [];
 
   var shareQuote = await financeServices.getShareMetrics(symbol);
+  var rates = 1;
+  if (shareQuote.financialCurrency !== appVariables.appCurrency) {
+    rates = await financeServices.getRatesForCoin(
+      shareQuote.financialCurrency,
+      appVariables.appCurrency
+    );
 
+    rates = rates.rates[appVariables.appCurrency];
+  }
   shareData.push({
     key: shareQuote.regularMarketPrice,
-    value: shareQuote.regularMarketPrice,
+    value: (shareQuote.regularMarketPrice * rates).toFixed(2),
     name: "Current price",
   });
 
@@ -28,17 +37,17 @@ export async function getShareMetrics(symbol) {
   });
   shareData.push({
     key: shareQuote.marketCap,
-    value: shareQuote.marketCap + " " + shareQuote.financialCurrency,
+    value: (shareQuote.marketCap * rates).toFixed(2) + " " + appVariables.appCurrency,
     name: "Market cap",
   });
   shareData.push({
     key: shareQuote.fiftyTwoWeekRange,
     value:
-      shareQuote.fiftyTwoWeekRange.low +
+      (shareQuote.fiftyTwoWeekRange.low * rates).toFixed(2) +
       " - " +
-      shareQuote.fiftyTwoWeekRange.high +
+      (shareQuote.fiftyTwoWeekRange.high * rates).toFixed(2) +
       " " +
-      shareQuote.financialCurrency,
+      appVariables.appCurrency,
     name: "52 week range",
   });
   shareData.push({
@@ -71,17 +80,27 @@ export async function getShareEarnings(symbol) {
   // await financeServices.sendNotificationImmediately(symbol);
   let shareEarningsRaw = await financeServices.getShareEarnings(symbol);
 
+  var rates = 1;
+  if (shareEarningsRaw.earnings.financialCurrency !== appVariables.appCurrency) {
+    rates = await financeServices.getRatesForCoin(
+      shareEarningsRaw.earnings.financialCurrency,
+      appVariables.appCurrency
+    );
+
+    rates = rates.rates[appVariables.appCurrency];
+  }
+
   shareEarningsRaw.earnings.earningsChart.quarterly.map((item) => {
     shareEarnings.EPS.actual.push({
-      y: Number(item.actual),
+      y: (Number(item.actual)*rates).toFixed(2),
       x: item.date,
-      label: item.actual,
+      label: (item.actual*rates).toFixed(2),
     });
 
     shareEarnings.EPS.estimate.push({
-      y: Number(item.estimate),
+      y: (Number(item.estimate)*rates).toFixed(2),
       x: item.date,
-      label: item.estimate,
+      label: (item.estimate*rates).toFixed(2),
     });
   });
   return shareEarnings;
