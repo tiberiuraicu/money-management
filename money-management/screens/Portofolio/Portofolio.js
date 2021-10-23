@@ -17,10 +17,10 @@ import CardRow from "../../components/CardRow";
 import CustomText from "../../components/CustomText";
 import CustomButton from "../../components/CustomButton";
 import PortfolioRow from "../../components/PortfolioRow";
-import TextInputCustom from "../../components/TextInputCustom";
 import AddNewTransaction from "./../../components/AddNewTransaction";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
+import NetInfo from "@react-native-community/netinfo";
 
 const Portofolio = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -79,6 +79,11 @@ const Portofolio = ({ navigation }) => {
       }
     );
   }
+  // const unsubscribe = NetInfo.addEventListener((state) => {
+  //   console.log("Connection type", state.type);
+  //   console.log("Is connected?", state.isConnected);
+  // });
+  // unsubscribe();
 
   useEffect(() => {
     if (isFocused) {
@@ -116,14 +121,14 @@ const Portofolio = ({ navigation }) => {
         >
           <MaterialCommunityIcons
             name="cash-multiple"
-            color={"green"}
+            color={"#4ade80"}
             size={25}
           />
         </TouchableOpacity>
       </View>
 
       <CustomButton
-        style={{ flex: 3 }}
+      style={styles.addTransactionButton}
         onPress={() => {
           navigation.navigate("AddNewTransaction");
         }}
@@ -138,7 +143,6 @@ const Portofolio = ({ navigation }) => {
         <FlatList
           testID="sharesList"
           data={ownedSharesList}
-          style={{ flex: 1 }}
           renderItem={(itemData) => (
             <PortfolioRow>
               <TouchableOpacity
@@ -181,6 +185,15 @@ const Portofolio = ({ navigation }) => {
                   borderRadius: 10,
                   width: "15%",
                   marginBottom: "2%",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.23,
+                  shadowRadius: 2.62,
+
+                  elevation: 4,
                 }}
               >
                 <TouchableOpacity
@@ -246,7 +259,7 @@ const Portofolio = ({ navigation }) => {
         >
           <FlatList
             data={currencies}
-            style={{ flex: 1 }}
+            
             renderItem={(itemData) => (
               <Card>
                 <TouchableOpacity
@@ -256,7 +269,6 @@ const Portofolio = ({ navigation }) => {
                     setCurrenciesModalVisibility(false);
                   }}
                 >
-       
                   <CardRow>
                     <Text>{itemData.item.symbol}</Text>
                     <Text>{itemData.item.name}</Text>

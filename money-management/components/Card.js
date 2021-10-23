@@ -18,7 +18,16 @@ const styles = StyleSheet.create({
     paddingRight: "10%",
     marginBottom: "2%",
     backgroundColor: "#FFFFFF",
-    borderRadius: 10
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
 });
 

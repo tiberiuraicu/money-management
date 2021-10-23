@@ -5,17 +5,19 @@ CREATE MOCKUPS
 
 TODO
 adaugare istoric
+verifica daca exista internet
 sa vina dividendele dar sa dea user accept daca chiar au venit
-eliminate if in pre si post market function in watchlist
-LA Watchlist nu se poate da scroll
 dupa ce s-a adaugat o actiune goleste inputurile
 search in Portofolio(sau ceva ordonare)
 search in Watchlist(sau ceva ordonare)
-adauga iconita cand nu merge netul
 daca actiunea nu mai exista sa arate un mesaj
 adauga poza aplicatie
+daca nu exista post sau pre market nu afisa randul
+
 
 DONE
+eliminate if in pre si post market function in watchlist
+LA Watchlist nu se poate da scroll
 adauga selectare moneda aplicatie
 adauga pret in functie de moneda actiunii
 cand tragi in jos sa se faca refresh(protfolio, watchlist, sharepage)

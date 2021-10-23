@@ -7,10 +7,17 @@ const Stack = createStackNavigator();
 
 function PortofolioNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Portofolio">
-      <Stack.Screen name="Portofolio" component={Portofolio} />
-      <Stack.Screen name="SharePage" component={SharePage} />
-      <Stack.Screen name="AddNewTransaction" component={AddNewTransaction} />
+    <Stack.Navigator initialRouteName="Portofolio" >
+      <Stack.Screen
+        name="Portofolio"
+        component={Portofolio}
+        options={{ headerShown: false }}
+
+      />
+      <Stack.Screen name="SharePage" component={SharePage}         options={{ headerShown: false }}
+ />
+      <Stack.Screen name="AddNewTransaction" component={AddNewTransaction}         options={{ headerShown: false }}
+/>
     </Stack.Navigator>
   );
 }

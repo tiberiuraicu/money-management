@@ -36,7 +36,6 @@ const WatchList = ({ navigation }) => {
 
   //PRE(premaket), REGULAR(regular)
   const getProfitLossColor = (number) => {
-    //  console.log(number);
     let itemCardText = {};
 
     if (number > 0) itemCardText["color"] = "green";
@@ -44,31 +43,6 @@ const WatchList = ({ navigation }) => {
 
     return itemCardText;
   };
-  function getExtendedHours(item) {
-    if (item.marketState === "POST")
-      return (
-        <CardRow>
-          <CustomText>Extended hours price</CustomText>
-          <CustomText style={getProfitLossColor(item.extendedHoursChange)}>
-            {item.extendedHoursPrice}
-            {"  "}
-            {item.extendedHoursChange} ( {item.extendedHoursChangePercent})
-          </CustomText>
-        </CardRow>
-      );
-    if (item.marketState === "PRE")
-      return (
-        <CardRow style={styles.alanyticView}>
-          <CustomText>Extended hours price </CustomText>
-          <CustomText style={getProfitLossColor(item.extendedHoursChange)}>
-            {item.extendedHoursPrice}
-            {"  "}
-            {item.extendedHoursChange} ( {item.extendedHoursChangePercent}
-            {"%"})
-          </CustomText>
-        </CardRow>
-      );
-  }
   return (
     <ScrollView
       style={styles.listContainer}
@@ -111,7 +85,19 @@ const WatchList = ({ navigation }) => {
                     {itemData.item.regularMarketChangePercent} %)
                   </CustomText>
                 </CardRow>
-                {getExtendedHours(itemData.item)}
+                <CardRow>
+                  <CustomText>Extended hours price</CustomText>
+                  <CustomText
+                    style={getProfitLossColor(
+                      itemData.item.extendedHoursChange
+                    )}
+                  >
+                    {itemData.item.extendedHoursPrice}
+                    {"  "}
+                    {itemData.item.extendedHoursChange} ({" "}
+                    {itemData.item.extendedHoursChangePercent})
+                  </CustomText>
+                </CardRow>
               </Card>
             </TouchableOpacity>
           )}

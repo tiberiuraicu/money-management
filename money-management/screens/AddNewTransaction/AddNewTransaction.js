@@ -106,6 +106,13 @@ const AddNewTransaction = () => {
       placeholders.transactionType
     );
     transactionServices.addTransaction(transaction, symbol);
+
+    setSymbol(null);
+    setSymbolValidation(false);
+    setPrice(null);
+    setPriceValidation(false);
+    setNumberOfShares(null);
+    setNumberOfSharesValidation(false);
   }
 
   function toggleSwitch() {
@@ -117,6 +124,7 @@ const AddNewTransaction = () => {
       transactionType: isEnabled ? "BUY" : "SELL",
     });
   }
+
   return (
     <ScrollView keyboardShouldPersistTaps="always" scrollEnabled={false}>
       <View style={styles.switchContainer}>
@@ -131,7 +139,6 @@ const AddNewTransaction = () => {
           {placeholders.transactionType}
         </Text>
       </View>
-
       <View style={styles.inputContainer}>
         <TextInputCustom
           testID="searchTerm"
@@ -171,6 +178,7 @@ const AddNewTransaction = () => {
         <TextInputCustom
           testID="price"
           keyboardType="numeric"
+          value={price}
           placeholder={placeholders.price}
           onChangeText={setPriceHandler}
           contextMenuHidden={true}
@@ -182,6 +190,7 @@ const AddNewTransaction = () => {
           testID="amount"
           placeholder={placeholders.amount}
           keyboardType="numeric"
+          value={numberOfShares}
           onChangeText={setNumberOfSharesHandler}
           contextMenuHidden={true}
         />
@@ -191,6 +200,7 @@ const AddNewTransaction = () => {
           </Text>
         )}
         <CustomButton
+          type="reset"
           testID="addTransactionButton"
           onPress={() => {
             Keyboard.dismiss();
@@ -200,13 +210,13 @@ const AddNewTransaction = () => {
           text="ADD TRANSACTION"
         ></CustomButton>
       </View>
-      <View>
+      {/* <View>
         <Button
           style={styles.button}
           title="Delete all data"
           onPress={transactionServices.clearAllData()}
         />
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

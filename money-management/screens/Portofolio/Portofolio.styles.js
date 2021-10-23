@@ -2,19 +2,26 @@ import { StyleSheet, Dimensions } from "react-native";
 
 export default StyleSheet.create({
   listContainer: {
-    flex: 1,
     width: "100%",
+    backgroundColor:"#075985",
+    height:"90%"
+
   },
   itemlist: {
-    flex: 1,
-    marginTop: "4%",
+    marginTop: "2.5%",
+  },
+  addTransactionButton:{
+    height:"3.5%",
+    marginTop:"1.5%",
+    marginBottom:"0%"
   },
   portofolioValueContainer: {
+    marginTop:"10%",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#075985",
   },
   portofolioValueText: {
     fontSize: 18,
@@ -22,6 +29,7 @@ export default StyleSheet.create({
     fontStyle: "italic",
     paddingLeft: 10,
     alignSelf: "center",
+    color:"white"
   },
   itemCardCompanyName: {
     alignSelf: "center",

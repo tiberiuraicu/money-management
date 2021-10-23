@@ -20,7 +20,7 @@ export default StyleSheet.create({
   },
   errorMessage:{
     color:"red",
-        marginLeft: "5%",
+    marginLeft: "5%",
 
   }
 });

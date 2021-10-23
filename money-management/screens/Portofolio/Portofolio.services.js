@@ -154,6 +154,5 @@ export async function getAvailableCurrencies() {
     });
   }
 
-  console.log(existingCurrenciesAsJson);
   return existingCurrenciesAsJson;
 }
