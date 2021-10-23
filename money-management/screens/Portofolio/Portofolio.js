@@ -20,10 +20,11 @@ import PortfolioRow from "../../components/PortfolioRow";
 import AddNewTransaction from "./../../components/AddNewTransaction";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
-import NetInfo from "@react-native-community/netinfo";
 
 const Portofolio = ({ navigation }) => {
+
   const isFocused = useIsFocused();
+
   const [isShareModalVisible, setShareModalVisibility] = useState(false);
   const [isCurrenciesModalVisible, setCurrenciesModalVisibility] =
     useState(false);
@@ -79,16 +80,14 @@ const Portofolio = ({ navigation }) => {
       }
     );
   }
-  // const unsubscribe = NetInfo.addEventListener((state) => {
-  //   console.log("Connection type", state.type);
-  //   console.log("Is connected?", state.isConnected);
-  // });
-  // unsubscribe();
+
 
   useEffect(() => {
     if (isFocused) {
       setPortofolioValueHandler();
       getAvailableCurrencies();
+
+
     }
   }, [isFocused]);
 
@@ -114,7 +113,6 @@ const Portofolio = ({ navigation }) => {
         <Text style={styles.portofolioValueText}>
           Portofolio value {portofolioValue}
         </Text>
-
         <TouchableOpacity
           testID="money-multiple"
           onPress={() => setCurrenciesModalVisibility(true)}

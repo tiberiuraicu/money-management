@@ -1,19 +1,23 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   listContainer: {
     width: "100%",
-    backgroundColor:"#075985",
-    height:"90%"
-
+    backgroundColor:"#030455",
   },
   itemlist: {
-    marginTop: "2.5%",
+    marginTop: "10%",
+    paddingTop:"5%",
+    paddingBottom:"10%",
+    borderTopStartRadius:25,
+    borderTopEndRadius:25,
+    backgroundColor:"#F2FCFE"
   },
   addTransactionButton:{
+    backgroundColor:"#677aa7",
     height:"3.5%",
-    marginTop:"1.5%",
-    marginBottom:"0%"
+    marginTop:"10%",
+    marginBottom:"0%",
   },
   portofolioValueContainer: {
     marginTop:"10%",
@@ -21,7 +25,6 @@ export default StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
-    backgroundColor: "#075985",
   },
   portofolioValueText: {
     fontSize: 18,

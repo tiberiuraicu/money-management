@@ -6,12 +6,19 @@ import PortofolioNavigator from "./PortofolioNavigator";
 import WatchList from "../screens/WatchList/WatchList";
 import Search from "../screens/Search/Search";
 import History from "../screens/History/History";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { Text, View,StatusBar } from "react-native";
 const TabNavigator = () => {
   const Tab = createMaterialBottomTabNavigator();
+  const netInfo = useNetInfo();
 
   //initial screen
   return (
     <NavigationContainer>
+       <StatusBar
+        animated={true}
+        backgroundColor="#030455"
+         />
       <Tab.Navigator
         barStyle={{
           backgroundColor: "white",
@@ -60,6 +67,8 @@ const TabNavigator = () => {
           }}
         /> */}
       </Tab.Navigator>
+      {!netInfo.isConnected && <Text style={{textAlign: 'center',color:"#9d174d"}}>Not connected</Text>}
+
     </NavigationContainer>
   );
 };

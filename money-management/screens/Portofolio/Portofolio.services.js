@@ -12,7 +12,6 @@ export async function getAllSharesPrices(portofolio) {
     }
 
     var shareQuote = await financeServices.default.getShareMetrics(symbolList);
-    //  console.log(shareQuote)
     symbolList = {};
 
     for (var item in shareQuote) {
@@ -132,7 +131,6 @@ export async function convertToSelectedAppCoin(shareQuote) {
     price = rates.rates[appVariables.appCurrency] * price;
   }
 
-  // return price
   return price;
 }
 
