@@ -66,7 +66,7 @@ const Search = ({ navigation }) => {
               });
             }}
           >
-            <Card key={itemData.item.name}>
+            <Card key={itemData.item.name} style={styles.card}>
               <CardRow>
                 <CustomText>{itemData.item.symbol}</CustomText>
                 <CustomText>{itemData.item.name}</CustomText>

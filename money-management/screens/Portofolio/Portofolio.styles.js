@@ -27,11 +27,11 @@ export default StyleSheet.create({
     width: "100%",
   },
   portofolioValueText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
     fontStyle: "italic",
     paddingLeft: 10,
-    alignSelf: "center",
+    alignSelf: "flex-end",
     color:"white"
   },
   itemCardCompanyName: {

@@ -55,7 +55,7 @@ const WatchList = ({ navigation }) => {
     >
       <View style={styles.itemlist}>
         {activityIndicator && (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#F2FCFE" />
         )}
         <FlatList
           data={watchListSharesList}
@@ -67,13 +67,13 @@ const WatchList = ({ navigation }) => {
                 })
               }
             >
-              <Card key={itemData.item.name}>
+              <Card key={itemData.item.name} style={styles.card}>
                 <Text style={styles.itemCardCompanyName}>
                   {itemData.item.symbol}
                 </Text>
 
                 <CardRow>
-                  <CustomText style={styles.itemCardText}>Price </CustomText>
+                  <CustomText >Price </CustomText>
                   <CustomText
                     style={getProfitLossColor(
                       itemData.item.regularMarketChange
@@ -107,7 +107,4 @@ const WatchList = ({ navigation }) => {
   );
 };
 
-WatchList.navigationOptions = {
-  headerTitle: "Watchlist",
-};
 export default WatchList;

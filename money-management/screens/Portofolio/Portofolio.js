@@ -111,7 +111,7 @@ const Portofolio = ({ navigation }) => {
     >
       <View style={styles.portofolioValueContainer}>
         <Text style={styles.portofolioValueText}>
-          Portofolio value {portofolioValue}
+          {portofolioValue}
         </Text>
         <TouchableOpacity
           testID="money-multiple"

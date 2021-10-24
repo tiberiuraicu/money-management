@@ -8,6 +8,7 @@ import {
   Button,
   ScrollView,
   Keyboard,
+  Pressable,
 } from "react-native";
 
 import styles from "./AddNewTransaction.styles";
@@ -18,8 +19,11 @@ import Card from "../../components/Card";
 import CardRow from "../../components/CardRow";
 import CustomText from "../../components/CustomText";
 import CustomButton from "../../components/CustomButton";
+import Modal from "react-native-modal";
 
 const AddNewTransaction = () => {
+  
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [placeholders, setPlaceholders] = useState({
     price: "Price at buy",
@@ -49,7 +53,7 @@ const AddNewTransaction = () => {
   const [autocompleteNames, setAutocompleteNames] = useState([]);
 
   async function setAutocompleteNamesHandler(searchTerm) {
-    setSymbol(searchTerm);
+    // setSymbol(searchTerm);
 
     setSymbolValidation(false);
     setSymbolValidationErrorMessage("");
@@ -107,7 +111,7 @@ const AddNewTransaction = () => {
     );
     transactionServices.addTransaction(transaction, symbol);
 
-    setSymbol(null);
+    setSymbol("");
     setSymbolValidation(false);
     setPrice(null);
     setPriceValidation(false);
@@ -126,7 +130,11 @@ const AddNewTransaction = () => {
   }
 
   return (
-    <ScrollView keyboardShouldPersistTaps="always" scrollEnabled={false}>
+    <ScrollView
+      keyboardShouldPersistTaps="always"
+      scrollEnabled={false}
+      style={styles.container}
+    >
       <View style={styles.switchContainer}>
         <Switch
           testID="buySellSwitch"
@@ -135,71 +143,101 @@ const AddNewTransaction = () => {
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+        <Text style={{ fontWeight: "bold", fontSize: 20, color: "white" }}>
           {placeholders.transactionType}
         </Text>
       </View>
       <View style={styles.inputContainer}>
-        <TextInputCustom
-          testID="searchTerm"
-          value={symbol}
-          placeholder=" Search term"
-          onChangeText={setAutocompleteNamesHandler}
-          contextMenuHidden={true}
-        />
-        {!symbolValidation && (
-          <Text testID="symbolErrorMessage" style={styles.errorMessage}>
-            {symbolValidationErrorMessage}
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible(true);
+          }}
+          style={{
+            borderRadius: 10,
+            height: "15%",
+            color: "#212121",
+            borderWidth: 1,
+
+            margin: 11,
+            paddingLeft: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              marginTop: 13,
+              color: symbol === "" ? "#788793" : "black",
+            }}
+          >
+            {symbol !== "" ? symbol : "Search term"}
           </Text>
-        )}
-        <View>
-          <FlatList
-            data={autocompleteNames}
-            keyboardShouldPersistTaps="always"
-            renderItem={(itemData) => (
-              <TouchableOpacity
-                key={itemData.item.name}
-                onPress={() => {
-                  setSymbol(itemData.item.symbol);
-                  setAutocompleteNames([]);
-                  setSymbolValidation(true);
-                }}
-              >
-                <Card>
-                  <CardRow>
-                    <CustomText>{itemData.item.symbol}</CustomText>
-                    <CustomText>{itemData.item.name}</CustomText>
-                  </CardRow>
-                </Card>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+        </TouchableOpacity>
+
+        <Text
+          testID="symbolErrorMessage"
+          style={{
+            color: !symbolValidation ? "red" : "transparent",
+            marginLeft: "5%",
+            height: "5%",
+          }}
+        >
+          {symbolValidationErrorMessage}
+        </Text>
+
         <TextInputCustom
           testID="price"
           keyboardType="numeric"
+          style={styles.input}
           value={price}
           placeholder={placeholders.price}
           onChangeText={setPriceHandler}
           contextMenuHidden={true}
         />
-        {!priceValidation && (
-          <Text style={styles.errorMessage}>{priceValidationErrorMessage}</Text>
-        )}
+        <Text
+          style={{
+            color: !priceValidation ? "red" : "transparent",
+            marginLeft: "5%",
+            height: "5%",
+          }}
+        >
+          {priceValidationErrorMessage}
+        </Text>
+
         <TextInputCustom
           testID="amount"
           placeholder={placeholders.amount}
+          style={styles.input}
           keyboardType="numeric"
           value={numberOfShares}
           onChangeText={setNumberOfSharesHandler}
           contextMenuHidden={true}
         />
-        {!numberOfSharesValidation && (
-          <Text testID="amountErrorMessage" style={styles.errorMessage}>
-            {numberOfSharesValidationErrorMessage}
-          </Text>
-        )}
+
+        <Text
+          testID="amountErrorMessage"
+          style={{
+            color: !numberOfSharesValidation ? "red" : "transparent",
+            marginLeft: "5%",
+            height: "5%",
+          }}
+        >
+          {numberOfSharesValidationErrorMessage}
+        </Text>
+
         <CustomButton
+          disabled={
+            !(symbolValidation && priceValidation && numberOfSharesValidation)
+          }
+          style={{
+            backgroundColor:
+              !(
+                symbolValidation &&
+                priceValidation &&
+                numberOfSharesValidation
+              ) === true
+                ? "gray"
+                : "black",
+          }}
           type="reset"
           testID="addTransactionButton"
           onPress={() => {
@@ -217,6 +255,71 @@ const AddNewTransaction = () => {
           onPress={transactionServices.clearAllData()}
         />
       </View> */}
+      <Modal
+        isVisible={isModalVisible}
+        onRequestClose={() => {
+          setIsModalVisible(false);
+        }}
+        statusBarTranslucent={true}
+        style={{
+          height: "95%",
+          padding: 0,
+          alignContent: "flex-start",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible(false);
+          }}
+        >
+          <View
+            style={{
+              height: "85%",
+              backgroundColor: "#F2FCFE",
+              borderRadius: 10,
+              paddingTop: "5%",
+            }}
+          >
+            <TextInputCustom
+              testID="searchTerm"
+              autoFocus = {true}
+
+              placeholder=" Search term"
+              onChangeText={setAutocompleteNamesHandler}
+              contextMenuHidden={true}
+            />
+            {!symbolValidation && (
+              <Text testID="symbolErrorMessage" style={styles.errorMessage}>
+                {symbolValidationErrorMessage}
+              </Text>
+            )}
+            <View>
+              <FlatList
+                data={autocompleteNames}
+                keyboardShouldPersistTaps="always"
+                renderItem={(itemData) => (
+                  <TouchableOpacity
+                    key={itemData.item.name}
+                    onPress={() => {
+                      setSymbol(itemData.item.symbol);
+                      setAutocompleteNames([]);
+                      setSymbolValidation(true);
+                      setIsModalVisible(false);
+                    }}
+                  >
+                    <Card style={styles.card}>
+                      <CardRow>
+                        <CustomText>{itemData.item.symbol}</CustomText>
+                        <CustomText>{itemData.item.name}</CustomText>
+                      </CardRow>
+                    </Card>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 };

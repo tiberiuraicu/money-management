@@ -65,12 +65,12 @@ const SharePage = ({ route, navigation }) => {
       }
     >
       <Text style={styles.companyName}>{symbol}</Text>
-      {activityIndicator && <ActivityIndicator size="large" color="#0000ff" />}
-      <View style={styles.itemlist}>
+      {activityIndicator && <ActivityIndicator size="large" color="#F2FCFE" />}
+      <View >
         <FlatList
           data={shareData}
           renderItem={(itemData) => (
-            <Card key={itemData.item.name}>
+            <Card key={itemData.item.name} style={styles.card}>
               <CardRow>
                 <CustomText>{itemData.item.name}</CustomText>
                 <CustomText>{itemData.item.value}</CustomText>
@@ -82,18 +82,21 @@ const SharePage = ({ route, navigation }) => {
           style={{
             backgroundColor: "white",
             paddingTop: "5%",
+            width:"95%",alignSelf:"center",
+            borderTopEndRadius:10,
+            borderTopStartRadius:10
           }}
         >
           <Text style={styles.chartTitle}>EPS last 4 quarters</Text>
         </View>
       </View>
       <View
-        style={{ paddingBottom: 50, paddingTop: 10, backgroundColor: "white" }}
+        style={{  marginBottom:50, paddingTop: 10, backgroundColor: "white", width:"95%",alignSelf:"center" }}
       >
         <Svg>
           <VictoryChart
             theme={VictoryTheme.material}
-            padding={{ top: 100, left: 40, right: 20, bottom: 40 }}
+            padding={{ top: 100, left: 50, right: 30, bottom: 40 }}
             style={{
               background: { fill: "white" },
             }}
@@ -116,7 +119,7 @@ const SharePage = ({ route, navigation }) => {
             />
             <VictoryGroup offset={30} colorScale={["blue", "green"]}>
               <VictoryBar
-                padding={{ top: 20, bottom: 60 }}
+                padding={{ top: 20, bottom: 20 }}
                 activateData={false}
                 data={shareEarnings.EPS.estimate}
               />

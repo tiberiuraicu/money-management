@@ -7,7 +7,6 @@ import {
   Keyboard,
   StyleSheet,
 } from "react-native";
-
 import * as transactionServices from "../screens/AddNewTransaction/AddNewTransaction.services";
 import * as models from "./../models/models";
 import TextInputCustom from "./TextInputCustom";
@@ -77,7 +76,7 @@ const AddNewTransaction = (props) => {
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View>
         <TouchableOpacity activeOpacity={1}>
           <View style={styles.inputContainer}>
@@ -146,7 +145,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     height: 350,
-
     marginLeft: "5%",
     marginRight: "5%",
   },
