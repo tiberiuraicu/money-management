@@ -37,7 +37,10 @@ export async function getShareMetrics(symbol) {
   });
   shareData.push({
     key: shareQuote.marketCap,
-    value: (shareQuote.marketCap * rates).toFixed(2) + " " + appVariables.appCurrency,
+    value:
+      (shareQuote.marketCap * rates).toFixed(2) +
+      " " +
+      appVariables.appCurrency,
     name: "Market cap",
   });
   shareData.push({
@@ -81,7 +84,9 @@ export async function getShareEarnings(symbol) {
   let shareEarningsRaw = await financeServices.getShareEarnings(symbol);
 
   var rates = 1;
-  if (shareEarningsRaw.earnings.financialCurrency !== appVariables.appCurrency) {
+  if (
+    shareEarningsRaw.earnings.financialCurrency !== appVariables.appCurrency
+  ) {
     rates = await financeServices.getRatesForCoin(
       shareEarningsRaw.earnings.financialCurrency,
       appVariables.appCurrency
@@ -92,16 +97,46 @@ export async function getShareEarnings(symbol) {
 
   shareEarningsRaw.earnings.earningsChart.quarterly.map((item) => {
     shareEarnings.EPS.actual.push({
-      y: (Number(item.actual)*rates).toFixed(2),
+      y: (Number(item.actual) * rates).toFixed(2),
       x: item.date,
-      label: (item.actual*rates).toFixed(2),
+      label: (item.actual * rates).toFixed(2),
     });
 
     shareEarnings.EPS.estimate.push({
-      y: (Number(item.estimate)*rates).toFixed(2),
+      y: (Number(item.estimate) * rates).toFixed(2),
       x: item.date,
-      label: (item.estimate*rates).toFixed(2),
+      label: (item.estimate * rates).toFixed(2),
     });
   });
   return shareEarnings;
+}
+
+export async function getSharePriceHistory(symbol) {
+    var sharePriceHistory = await financeServices.getSharePriceHistory(symbol);
+
+    for (var i = 0; i < sharePriceHistory.length; i++) {
+      delete sharePriceHistory[i].adjClose;
+      delete sharePriceHistory[i].high;
+      delete sharePriceHistory[i].low;
+      delete sharePriceHistory[i].open;
+      delete sharePriceHistory[i].volume;
+      sharePriceHistory[i].y=sharePriceHistory[i].close
+      delete sharePriceHistory[i].close
+      sharePriceHistory[i].x=sharePriceHistory[i].date
+      delete sharePriceHistory[i].date
+    }
+  return sharePriceHistory
+
+  // var sharePriceHistory = await financeServices.getSharePriceHistory(symbol);
+  // var chartData = {
+  //   dates: [],
+  //   prices: [],
+  // };
+
+  // for (var i = 0; i < sharePriceHistory.length; i++) {
+  //   chartData.prices.push(sharePriceHistory[i].close);
+  //   chartData.dates.push(sharePriceHistory[i].date);
+  // }
+  // // console.log(chartData);
+  // return chartData;
 }

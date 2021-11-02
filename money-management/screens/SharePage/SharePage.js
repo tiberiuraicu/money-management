@@ -6,16 +6,24 @@ import {
   ScrollView,
   FlatList,
   Text,
-  RefreshControl
+  RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import styles from "./SharePage.styles";
-import { getShareMetrics, getShareEarnings } from "./SharePage.services";
+import {
+  getShareMetrics,
+  getShareEarnings,
+  getSharePriceHistory,
+} from "./SharePage.services";
 import {
   VictoryBar,
   VictoryChart,
   VictoryTheme,
   VictoryGroup,
   VictoryLegend,
+  VictoryLine,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
 } from "victory-native";
 import Svg from "react-native-svg";
 import Card from "../../components/Card";
@@ -26,6 +34,8 @@ const SharePage = ({ route, navigation }) => {
   const isFocused = useIsFocused();
 
   const [activityIndicator, setActivityIndicator] = useState(true);
+  const [sharePriceHistory, setSharePriceHistory] = useState([]);
+
   const [shareData, setshareData] = useState([]);
   const [shareEarnings, setShareEarnings] = useState({
     EPS: {
@@ -41,13 +51,25 @@ const SharePage = ({ route, navigation }) => {
     setActivityIndicator(false);
   };
 
+  const setSharePriceHistoryHandler = async () => {
+    setActivityIndicator(true);
+
+    setSharePriceHistory(await getSharePriceHistory(symbol));
+    setActivityIndicator(false);
+
+  };
+
   const setShareEarningsHandler = async () => {
     setShareEarnings(await getShareEarnings(symbol));
   };
+
   useEffect(() => {
     if (isFocused) {
+
       setshareDataHandler();
       setShareEarningsHandler();
+      setSharePriceHistoryHandler();
+
     }
   }, [isFocused]);
 
@@ -60,13 +82,42 @@ const SharePage = ({ route, navigation }) => {
           onRefresh={() => {
             setshareDataHandler();
             setShareEarningsHandler();
+            setSharePriceHistoryHandler();
+
           }}
         />
       }
     >
       <Text style={styles.companyName}>{symbol}</Text>
       {activityIndicator && <ActivityIndicator size="large" color="#F2FCFE" />}
-      <View >
+      <View>
+        <Card style={{ backgroundColor: "white", paddingLeft: "2%" }}>
+          <VictoryChart
+            theme={VictoryTheme.material}
+            // containerComponent={
+            //   <VictoryVoronoiContainer
+            //     labels={() =>
+            //       `${sharePriceHistory.x}, ${sharePriceHistory.y}`
+
+            //     }
+            //   />
+            // }
+          >
+            <VictoryLine
+              labelComponent={<VictoryTooltip />}
+              interpolation={"catmullRom"}
+              style={{
+                data: {
+                  stroke: "#c43a31",
+                  strokeWidth: 2,
+                  strokeLinecap: "round",
+                },
+              }}
+              data={sharePriceHistory}
+            />
+          </VictoryChart>
+         
+        </Card>
         <FlatList
           data={shareData}
           renderItem={(itemData) => (
@@ -82,16 +133,23 @@ const SharePage = ({ route, navigation }) => {
           style={{
             backgroundColor: "white",
             paddingTop: "5%",
-            width:"95%",alignSelf:"center",
-            borderTopEndRadius:10,
-            borderTopStartRadius:10
+            width: "95%",
+            alignSelf: "center",
+            borderTopEndRadius: 10,
+            borderTopStartRadius: 10,
           }}
         >
           <Text style={styles.chartTitle}>EPS last 4 quarters</Text>
         </View>
       </View>
       <View
-        style={{  marginBottom:50, paddingTop: 10, backgroundColor: "white", width:"95%",alignSelf:"center" }}
+        style={{
+          marginBottom: 50,
+          paddingTop: 10,
+          backgroundColor: "white",
+          width: "95%",
+          alignSelf: "center",
+        }}
       >
         <Svg>
           <VictoryChart

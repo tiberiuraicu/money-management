@@ -23,10 +23,21 @@ export default {
     // return shareHistory.transactions;
   },
 
-  async getShareEarnings(symbol) {
-    return await yahooFinance.quoteSummary(symbol, {
-      modules: ["earnings"],
+  async getSharePriceHistory(symbol, period) {
+    var date1 = new Date();
+    date1.setFullYear(date1.getFullYear() - 1);
+
+    return await yahooFinance.historical(symbol, {
+      period1: date1,
+      interval: "1d",
     });
+  },
+  async getShareEarnings(symbol) {
+    try {
+      return await yahooFinance.quoteSummary(symbol, {
+        modules: ["earnings"],
+      });
+    } catch (exception) {}
   },
 
   async getSharePrice(symbol) {
@@ -40,41 +51,48 @@ export default {
   },
 
   async getAutoCompleteData(text) {
-    const host = "api.frankfurter.app";
-
-  
     // create array for storing suggestions for autocomplete
     var suggestions = [];
     try {
-      const result = await yahooFinance.search(text /* queryOptions */);
-
+      const result = await yahooFinance.search(
+        text,
+        {},
+        { validateResult: false }
+      );
       //get the suggested symbols
       result.quotes.map((item) => {
         if (item["symbol"] !== undefined)
           suggestions.push({
             id: item["symbol"],
-            symbol: (() => {
+            interfaceSymbol: (() => {
               if (item["symbol"].length > 7)
-                return String(item["symbol"]).substring(0, 7) + "...";
+                return (
+                  String(item["symbol"]).substring(0, 7) +
+                  (String(item["symbol"]).length > 7 ? "..." : "")
+                );
               else return String(item["symbol"]);
             })(),
+            symbol: item["symbol"],
             name: (() => {
-              if (item["shortname"].length > 30)
-                return String(item["shortname"]).substring(0, 35) + "...";
+              if (item["shortname"].length > 20)
+                return (
+                  String(item["shortname"]).substring(0, 20) +
+                  (String(item["shortname"]).length > 20 ? "..." : "")
+                );
               else return String(item["shortname"]);
             })(),
           });
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
     return suggestions;
   },
 
-  async getAvailableCurrencies(){
+  async getAvailableCurrencies() {
     const host = "api.frankfurter.app";
 
-    const  res= await fetch(
-      `https://${host}/currencies?`
-    )
+    const res = await fetch(`https://${host}/currencies?`);
     return res.json();
   },
 

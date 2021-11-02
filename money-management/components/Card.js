@@ -12,7 +12,8 @@ const Card = (props) => {
 const styles = StyleSheet.create({
   shareCardData: {
     padding: 10,
-    width: "100%",
+    width: "95%",
+    alignSelf: "center",
     paddingTop: "2%",
     paddingLeft: "10%",
     paddingRight: "10%",
@@ -26,7 +27,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-
     elevation: 4,
   },
 });

@@ -76,7 +76,8 @@ const AddNewTransaction = (props) => {
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="always"
+    >
       <View>
         <TouchableOpacity activeOpacity={1}>
           <View style={styles.inputContainer}>

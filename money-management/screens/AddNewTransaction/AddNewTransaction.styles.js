@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
+import * as constants from "./../../constants/appConstants";
 
 export default StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#030455",
+    backgroundColor: constants.BACKGROUND_COLOR,
   },
   inputContainer: {
     height: 400,
@@ -20,16 +21,28 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
+  switchText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "white",
+  },
   errorMessage: {
     color: "red",
     marginLeft: "5%",
-    height:"5%"
+    height: "5%",
   },
-  input:{
-    height:"15%",
+  input: {
+    height: "15%",
   },
-  card:{
-    width:"95%",
-    alignSelf:"center"
-  }
+  searchTermInput:{
+    borderRadius: 10,
+    height: "15%",
+    borderWidth: 1,
+    margin: 11,
+    paddingLeft: 10,
+  },
+  card: {
+    width: "95%",
+    alignSelf: "center",
+  },
 });

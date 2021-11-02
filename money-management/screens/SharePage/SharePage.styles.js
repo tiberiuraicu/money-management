@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
+import * as constants from "./../../constants/appConstants"
 
 export default StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#030455",
-
+    backgroundColor:constants.BACKGROUND_COLOR,
   },
   companyName: {
     marginTop: "5%",

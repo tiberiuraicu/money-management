@@ -9,7 +9,6 @@ export default {
   getItem: async (key) => {
     try {
       const item = await AsyncStorage.getItem(key);
-
       return item;
     } catch (error) {
       console.log(error);

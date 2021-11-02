@@ -21,7 +21,6 @@ export async function getAllSharesPrices(portofolio) {
       };
     }
   }
-
   return symbolList;
 }
 
@@ -120,7 +119,9 @@ export async function convertToSelectedAppCoin(shareQuote) {
   // get share price
   price = shareQuote.regularMarketPrice;
   // get share currency
-  let currency = shareQuote.financialCurrency;
+  let currency = null;
+  if (shareQuote.financialCurrency) currency = shareQuote.financialCurrency;
+  if (shareQuote.currency) currency = shareQuote.currency;
   // if it is different from the app currency
   if (currency !== appVariables.appCurrency) {
     // convert price to app currency
@@ -130,7 +131,6 @@ export async function convertToSelectedAppCoin(shareQuote) {
     );
     price = rates.rates[appVariables.appCurrency] * price;
   }
-
   return price;
 }
 
@@ -142,7 +142,7 @@ export async function getAvailableCurrencies() {
   var existingCurrencies =
     await financeServices.default.getAvailableCurrencies();
 
-  var existingCurrenciesAsJson =[];
+  var existingCurrenciesAsJson = [];
 
   for (var symbol in Object.keys(existingCurrencies)) {
     symbol = Object.keys(existingCurrencies)[symbol];
@@ -151,6 +151,5 @@ export async function getAvailableCurrencies() {
       name: existingCurrencies[symbol],
     });
   }
-
   return existingCurrenciesAsJson;
 }

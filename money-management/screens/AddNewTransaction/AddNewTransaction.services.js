@@ -85,7 +85,6 @@ export async function getAutoCompleteData(searchTerm) {
 }
 
 export async function editHoldings(symbol, transaction) {
-  console.log(transaction)
   // get portfolio
   var portofolioFromStorage = await storage.default.getItem("portofolio");
   portofolioFromStorage = JSON.parse(portofolioFromStorage);

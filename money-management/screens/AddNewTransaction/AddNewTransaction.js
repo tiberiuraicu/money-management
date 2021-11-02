@@ -8,7 +8,6 @@ import {
   Button,
   ScrollView,
   Keyboard,
-  Pressable,
 } from "react-native";
 
 import styles from "./AddNewTransaction.styles";
@@ -19,10 +18,11 @@ import Card from "../../components/Card";
 import CardRow from "../../components/CardRow";
 import CustomText from "../../components/CustomText";
 import CustomButton from "../../components/CustomButton";
+import ErrorMessage from "../../components/ErrorMessage";
+
 import Modal from "react-native-modal";
 
 const AddNewTransaction = () => {
-  
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [placeholders, setPlaceholders] = useState({
@@ -113,9 +113,9 @@ const AddNewTransaction = () => {
 
     setSymbol("");
     setSymbolValidation(false);
-    setPrice(null);
+    setPrice("");
     setPriceValidation(false);
-    setNumberOfShares(null);
+    setNumberOfShares("");
     setNumberOfSharesValidation(false);
   }
 
@@ -143,24 +143,14 @@ const AddNewTransaction = () => {
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-        <Text style={{ fontWeight: "bold", fontSize: 20, color: "white" }}>
-          {placeholders.transactionType}
-        </Text>
+        <Text style={styles.switchText}>{placeholders.transactionType}</Text>
       </View>
       <View style={styles.inputContainer}>
         <TouchableOpacity
           onPress={() => {
             setIsModalVisible(true);
           }}
-          style={{
-            borderRadius: 10,
-            height: "15%",
-            color: "#212121",
-            borderWidth: 1,
-
-            margin: 11,
-            paddingLeft: 10,
-          }}
+          style={styles.searchTermInput}
         >
           <Text
             style={{
@@ -173,16 +163,10 @@ const AddNewTransaction = () => {
           </Text>
         </TouchableOpacity>
 
-        <Text
-          testID="symbolErrorMessage"
-          style={{
-            color: !symbolValidation ? "red" : "transparent",
-            marginLeft: "5%",
-            height: "5%",
-          }}
-        >
+        <ErrorMessage errorTruthValue={symbolValidation}>
+          {" "}
           {symbolValidationErrorMessage}
-        </Text>
+        </ErrorMessage>
 
         <TextInputCustom
           testID="price"
@@ -193,15 +177,11 @@ const AddNewTransaction = () => {
           onChangeText={setPriceHandler}
           contextMenuHidden={true}
         />
-        <Text
-          style={{
-            color: !priceValidation ? "red" : "transparent",
-            marginLeft: "5%",
-            height: "5%",
-          }}
-        >
+
+        <ErrorMessage errorTruthValue={priceValidation}>
+          {" "}
           {priceValidationErrorMessage}
-        </Text>
+        </ErrorMessage>
 
         <TextInputCustom
           testID="amount"
@@ -213,16 +193,10 @@ const AddNewTransaction = () => {
           contextMenuHidden={true}
         />
 
-        <Text
-          testID="amountErrorMessage"
-          style={{
-            color: !numberOfSharesValidation ? "red" : "transparent",
-            marginLeft: "5%",
-            height: "5%",
-          }}
-        >
+        <ErrorMessage errorTruthValue={numberOfSharesValidation}>
+          {" "}
           {numberOfSharesValidationErrorMessage}
-        </Text>
+        </ErrorMessage>
 
         <CustomButton
           disabled={
@@ -238,8 +212,6 @@ const AddNewTransaction = () => {
                 ? "gray"
                 : "black",
           }}
-          type="reset"
-          testID="addTransactionButton"
           onPress={() => {
             Keyboard.dismiss();
             if (symbolValidation && priceValidation && numberOfSharesValidation)
@@ -282,17 +254,16 @@ const AddNewTransaction = () => {
           >
             <TextInputCustom
               testID="searchTerm"
-              autoFocus = {true}
-
+              autoFocus={true}
               placeholder=" Search term"
               onChangeText={setAutocompleteNamesHandler}
               contextMenuHidden={true}
             />
-            {!symbolValidation && (
-              <Text testID="symbolErrorMessage" style={styles.errorMessage}>
-                {symbolValidationErrorMessage}
-              </Text>
-            )}
+            <ErrorMessage errorTruthValue={symbolValidation}>
+              {" "}
+              {symbolValidationErrorMessage}
+            </ErrorMessage>
+
             <View>
               <FlatList
                 data={autocompleteNames}
@@ -309,7 +280,7 @@ const AddNewTransaction = () => {
                   >
                     <Card style={styles.card}>
                       <CardRow>
-                        <CustomText>{itemData.item.symbol}</CustomText>
+                        <CustomText>{itemData.item.interfaceSymbol}</CustomText>
                         <CustomText>{itemData.item.name}</CustomText>
                       </CardRow>
                     </Card>

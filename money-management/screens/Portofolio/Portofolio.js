@@ -22,7 +22,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Modal from "react-native-modal";
 
 const Portofolio = ({ navigation }) => {
-
   const isFocused = useIsFocused();
 
   const [isShareModalVisible, setShareModalVisibility] = useState(false);
@@ -48,18 +47,19 @@ const Portofolio = ({ navigation }) => {
     setPortofolioValue(portofolioValue);
   }
 
-  async function getAvailableCurrencies() {
+  async function toggleCurrenciesModal() {
     setCurrencies(await portofolioServices.getAvailableCurrencies());
+    setCurrenciesModalVisibility(true)
   }
 
-  const toggleModal = (symbol) => {
+  const toggleEditModal = (symbol) => {
     setShareModalVisibility(!isShareModalVisible);
     setEditSymbol(symbol);
   };
 
-  async function deleteShareData(symbol) {
+  async function toggleDeleteModal(symbol) {
     Alert.alert(
-      "Delete " + symbol,
+      "Delete " + symbol ,
       "Are you sure you want to delete " + symbol + " ?",
       [
         {
@@ -68,7 +68,6 @@ const Portofolio = ({ navigation }) => {
             await portofolioServices.deleteShareData(symbol);
             setPortofolioValueHandler();
           },
-          style: { marginTop: 2000 },
         },
         {
           text: "No",
@@ -81,23 +80,12 @@ const Portofolio = ({ navigation }) => {
     );
   }
 
-
   useEffect(() => {
     if (isFocused) {
       setPortofolioValueHandler();
-      getAvailableCurrencies();
-
-
+      
     }
   }, [isFocused]);
-
-  const getProfitLossColor = (number) => {
-    let itemCardText = {};
-
-    if (number > 0) itemCardText["color"] = "green";
-    if (number < 0) itemCardText["color"] = "red";
-    return itemCardText;
-  };
 
   return (
     <ScrollView
@@ -110,12 +98,10 @@ const Portofolio = ({ navigation }) => {
       }
     >
       <View style={styles.portofolioValueContainer}>
-        <Text style={styles.portofolioValueText}>
-          {portofolioValue}
-        </Text>
+        <Text style={styles.portofolioValueText}>{portofolioValue}</Text>
         <TouchableOpacity
           testID="money-multiple"
-          onPress={() => setCurrenciesModalVisibility(true)}
+          onPress={toggleCurrenciesModal}
         >
           <MaterialCommunityIcons
             name="cash-multiple"
@@ -126,7 +112,7 @@ const Portofolio = ({ navigation }) => {
       </View>
 
       <CustomButton
-      style={styles.addTransactionButton}
+        style={styles.addTransactionButton}
         onPress={() => {
           navigation.navigate("AddNewTransaction");
         }}
@@ -166,41 +152,20 @@ const Portofolio = ({ navigation }) => {
                   <CardRow>
                     <CustomText>Profit/Loss </CustomText>
                     <CustomText
-                      style={getProfitLossColor(
-                        Number(itemData.item.shareTotalProfit).toFixed(2)
-                      )}
+                      style={{
+                        color:
+                          itemData.item.shareTotalProfit > 0 ? "green" : "red",
+                      }}
                     >
                       {Number(itemData.item.shareTotalProfit).toFixed(2)}
                     </CustomText>
                   </CardRow>
                 </Card>
               </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: "column",
-                  justifyContent: "space-around",
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: 10,
-                  width: "15%",
-                  marginBottom: "2%",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.23,
-                  shadowRadius: 2.62,
-
-                  elevation: 4,
-                }}
-              >
+              <View style={styles.actionsPanel}>
                 <TouchableOpacity
                   testID="edit"
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onPress={() => toggleModal(itemData.item.symbol)}
+                  onPress={() => toggleEditModal(itemData.item.symbol)}
                 >
                   <MaterialCommunityIcons
                     name="pencil"
@@ -210,11 +175,7 @@ const Portofolio = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   testID="delete"
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onPress={() => deleteShareData(itemData.item.symbol)}
+                  onPress={() => toggleDeleteModal(itemData.item.symbol)}
                 >
                   <MaterialCommunityIcons
                     name="delete"
@@ -247,6 +208,7 @@ const Portofolio = ({ navigation }) => {
             />
           </TouchableOpacity>
         </Modal>
+
         <Modal
           isVisible={isCurrenciesModalVisible}
           onRequestClose={() => {
@@ -257,7 +219,6 @@ const Portofolio = ({ navigation }) => {
         >
           <FlatList
             data={currencies}
-            
             renderItem={(itemData) => (
               <Card>
                 <TouchableOpacity
